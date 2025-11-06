@@ -1,0 +1,13 @@
+# JetBrains IDEs (PyCharm, IntelliJ, etc.)
+.idea/
+.idea/workspace.xml  # workspace.xml should always be ignored as it contains user-specific preferences
+!.idea/.gitignore  # except for the .gitignore file inside .idea, which is maintained by the IDE itself
+
+# Python bytecode and cache files
+__pycache__/  # ignore __pycache__ folders in any directory recursively
+*.pyc         # ignore all compiled python files with .pyc extension
+*.pyo
+*.pyd
+*$py.class    # for Jython
+
+.env
