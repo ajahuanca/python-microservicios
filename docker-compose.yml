@@ -1,0 +1,126 @@
+version: "3.8"
+
+services:
+  nginx:
+    image: nginx:stable
+    ports:
+      - "8000:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - service_auth
+      - service_empresas
+      - service_proyectos
+      - service_programacion
+    networks:
+      - front_net
+      - internal_net
+
+  postgres_auth:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: authdb
+      POSTGRES_USER: auth
+      POSTGRES_PASSWORD: authpass
+    volumes:
+      - pg_auth_data:/var/lib/postgresql/data
+    networks:
+      - internal_net
+
+  service_auth:
+    build: ./service_auth
+    env_file:
+      - ./service_auth/.env
+    environment:
+      - DATABASE_URL=postgres://auth:authpass@postgres_auth:5432/authdb
+    depends_on:
+      - postgres_auth
+    networks:
+      - front_net
+      - internal_net
+
+  postgres_a:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: adb
+      POSTGRES_USER: auser
+      POSTGRES_PASSWORD: apass
+    volumes:
+      - pg_a_data:/var/lib/postgresql/data
+    networks:
+      - internal_net
+
+  service_empresas:
+    build: ./service_empresas
+    env_file:
+      - ./service_empresas/.env
+    environment:
+      - DATABASE_URL=postgres://auser:apass@postgres_a:5432/adb
+    depends_on:
+      - postgres_a
+      - service_auth
+    networks:
+      - front_net
+      - internal_net
+
+  postgres_b:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: bdb
+      POSTGRES_USER: buser
+      POSTGRES_PASSWORD: bpass
+    volumes:
+      - pg_b_data:/var/lib/postgresql/data
+    networks:
+      - internal_net
+
+  service_proyectos:
+    build: ./service_proyectos
+    env_file:
+      - ./service_proyectos/.env
+    environment:
+      - DATABASE_URL=postgres://buser:bpass@postgres_b:5432/bdb
+      - SERVICE_A_URL=http://service_empresas:8000
+      - SERVICE_C_URL=http://service_programacion:8000
+    depends_on:
+      - postgres_b
+      - service_auth
+      - service_empresas
+      - service_programacion
+    networks:
+      - front_net
+      - internal_net
+
+  postgres_c:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: cdb
+      POSTGRES_USER: cuser
+      POSTGRES_PASSWORD: cpass
+    volumes:
+      - pg_c_data:/var/lib/postgresql/data
+    networks:
+      - internal_net
+
+  service_programacion:
+    build: ./service_programacion
+    env_file:
+      - ./service_programacion/.env
+    environment:
+      - DATABASE_URL=postgres://cuser:cpass@postgres_c:5432/cdb
+    depends_on:
+      - postgres_c
+      - service_auth
+    networks:
+      - front_net
+      - internal_net
+
+volumes:
+  pg_auth_data:
+  pg_a_data:
+  pg_b_data:
+  pg_c_data:
+
+networks:
+  front_net:
+  internal_net:
