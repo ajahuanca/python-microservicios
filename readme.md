@@ -239,3 +239,17 @@ GET /proyectos/detalle/<id>/
 ```
 ### 6. Para iniciar con el Service de Programación/Seguimiento (Service C)
 
+- Gestiona Programacion Fisico y Financiera por proyecto.
+- CRUD de Programacion y Seguimiento con JWT.
+- Base de datos PostgreSQL independiente.
+
+Iniciar
+- Crear `.env` con DATABASE_URL apuntando a postgres_c.
+- Levantar contenedores: `docker-compose up --build`
+- Migraciones: `docker-compose exec service_programacion python manage.py migrate`
+
+Probar
+```bash
+GET /fisico/ ó /financiera/      (requiere header `Authorization: Bearer <token>`)
+POST /seguimiento/                para registrar avances de proyecto
+```

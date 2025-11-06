@@ -1,13 +1,21 @@
 from django.db import models
 
 
-class Programacion(models.Model):
+class ProgramacionFisico(models.Model):
     proyecto_id = models.IntegerField()
-    avance_fisico = models.FloatField()
-    avance_financiero = models.FloatField()
+    descripcion = models.TextField()
+    fecha_inicio = models.DateField()
+    fecha_fin = models.DateField()
+    avance = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
+
+
+class ProgramacionFinanciera(models.Model):
+    proyecto_id = models.IntegerField()
+    monto_programado = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    monto_ejecutado = models.DecimalField(max_digits=12, decimal_places=2, default=0)
 
 
 class Seguimiento(models.Model):
-    programacion = models.ForeignKey(Programacion, on_delete=models.CASCADE)
-    observaciones = models.TextField()
-
+    proyecto_id = models.IntegerField()
+    fecha_registro = models.DateTimeField(auto_now_add=True)
+    observacion = models.TextField()
