@@ -1,5 +1,9 @@
 # Plataforma para Gestión de Proyectos - SAP
 
+## Repositorio
+
+https://github.com/ajahuanca/python-microservicios
+
 ## Circuit Breaker & Retry Pattern en Service B (Proyectos)
 
 Se implementaron los patrones Circuit Breaker y Retry Pattern en el microservicio Service B (Proyectos), encargado de coordinar la comunicación con los microservicios Service A (Empresas) y Service C (Programación y Seguimiento de Proyecto).
@@ -198,3 +202,39 @@ POST http://localhost:8000/auth/token/
 ó
 curl -X POST -H "Content-Type: application/json" -d '{"username": "edwin", "password": "pass123"}' http://localhost:8000/auth/token/ 
 ```
+> Nota. Todos los servicios tienen un archivo `.env.example`, ponerlo en `.env`
+4. Para iniciar con Service Empresas (Service A)
+
+- Gestiona información de Empresas con modelo realista (razón social, NIT, representante, etc.).
+- Endpoints CRUD protegidos por JWT emitido por `service_auth`.
+- Base de datos PostgreSQL independiente (`Database per Service`).
+- No invoca otros servicios; es consumido por `service_proyectos`.
+
+Probar
+```bash
+# GET /empresas/ (requiere header `Authorization: Bearer <token>`)
+POST /empresas/ para crear empresa
+```
+
+5. Para iniciar con Service de Proyectos (Service B)
+
+- Modelo Proyecto.
+- Endpoints CRUD protegidos por JWT.
+```bash
+# Endpoint /proyectos/detalle/<id>/ que orquesta llamadas a Service A (Empresas) y Service C (Programacion).
+# Implementa Retry (tenacity) y Circuit Breaker (pybreaker) en app_b/clients.py.
+```
+
+Iniciar:
+```bash
+# Definir .env con DATABASE_URL apuntando al contenedor postgres_b
+docker-compose up --build
+docker-compose exec service_proyectos python manage.py migrate
+```
+
+Probar:
+```bash
+# Crear proyecto (POST /proyectos/) con empresa_id válido
+GET /proyectos/detalle/<id>/
+```
+

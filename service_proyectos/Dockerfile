@@ -10,4 +10,6 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY . .
 
-CMD ["gunicorn", "service_b_api.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "2"]
+EXPOSE 8000
+
+CMD ["gunicorn", "service_proyectos.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "2"]

@@ -4,6 +4,8 @@ import dj_database_url
 from dotenv import load_dotenv
 
 
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -12,7 +14,7 @@ SECRET_KEY = 'django-insecure-z)l%2gwgm)my0!n0^vfsbsk002nz1+%0ze5vbf=g6jmrc+fp-0
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 INSTALLED_APPS = [
@@ -22,6 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'app_a',
 ]
 
