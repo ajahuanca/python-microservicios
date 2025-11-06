@@ -176,18 +176,19 @@ sap/
 ```
 
 ## Levantar el proyecto
-1. Desde la raíz del proyecto
+
+### 1. Desde la raíz del proyecto
 ```bash
 docker-compose up --build
 ```
-2. Ejecutar las migraciones por servicio
+### 2. Ejecutar las migraciones por servicio
 ```bash
 docker-compose exec service_auth python manage.py migrate
 docker-compose exec service_empresas python manage.py migrate
 docker-compose exec service_proyectos python manage.py migrate
 docker-compose exec service_programacion python manage.py migrate
 ```
-3. Registrar usuario y obtener token
+### 3. Registrar usuario y obtener token
 
 ```bash
 # registrar
@@ -203,7 +204,7 @@ POST http://localhost:8000/auth/token/
 curl -X POST -H "Content-Type: application/json" -d '{"username": "edwin", "password": "pass123"}' http://localhost:8000/auth/token/ 
 ```
 > Nota. Todos los servicios tienen un archivo `.env.example`, ponerlo en `.env`
-4. Para iniciar con Service Empresas (Service A)
+###  4. Para iniciar con Service Empresas (Service A)
 
 - Gestiona información de Empresas con modelo realista (razón social, NIT, representante, etc.).
 - Endpoints CRUD protegidos por JWT emitido por `service_auth`.
@@ -216,7 +217,7 @@ Probar
 POST /empresas/ para crear empresa
 ```
 
-5. Para iniciar con Service de Proyectos (Service B)
+### 5. Para iniciar con Service de Proyectos (Service B)
 
 - Modelo Proyecto.
 - Endpoints CRUD protegidos por JWT.
@@ -231,10 +232,10 @@ Iniciar:
 docker-compose up --build
 docker-compose exec service_proyectos python manage.py migrate
 ```
-
 Probar:
 ```bash
 # Crear proyecto (POST /proyectos/) con empresa_id válido
 GET /proyectos/detalle/<id>/
 ```
+### 6. Para iniciar con el Service de Programación/Seguimiento (Service C)
 
