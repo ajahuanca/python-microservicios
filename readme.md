@@ -72,7 +72,7 @@ Intento 3 → falla → esperar 4-6s
 ```
 > Si alguno de los intentos responde con éxito → flujo continúa normalmente.
 
-#### 5. ¿Qué pasa si después de los 3 reintentos sigue fallando?
+#### 4. ¿Qué pasa si después de los 3 reintentos sigue fallando?
 Service B considera que el servicio dependiente no está disponible.
 Entonces entra el Circuit Breaker:
 
@@ -125,11 +125,11 @@ sap/
 ├─ docker-compose.yml
 ├─ nginx/
 │   └─ nginx.conf
-├─ auth-service/
+├─ service_auth/
 │   ├─ Dockerfile
 │   ├─ requirements.txt
 │   ├─ manage.py
-│   ├─ auth_api/
+│   ├─ service_auth/
 │   │   ├─ settings.py
 │   │   ├─ urls.py
 │   │   └─ wsgi.py
@@ -139,7 +139,7 @@ sap/
 │   ├─ Dockerfile
 │   ├─ requirements.txt
 │   ├─ manage.py
-│   ├─ service_a_api/
+│   ├─ service_empresas(service_a_api)/
 │   │   ├─ settings.py
 │   │   ├─ urls.py
 │   │   └─ wsgi.py
@@ -150,7 +150,7 @@ sap/
 │   ├─ Dockerfile
 │   ├─ requirements.txt
 │   ├─ manage.py
-│   ├─ service_b_api/
+│   ├─ service_proyectos(service_b_api)/
 │   │   ├─ settings.py
 │   │   ├─ urls.py
 │   │   └─ wsgi.py
@@ -162,7 +162,7 @@ sap/
 │   ├─ Dockerfile
 │   ├─ requirements.txt
 │   ├─ manage.py
-│   ├─ service_c_api/
+│   ├─ service_programacion(service_c_api)/
 │   │   ├─ settings.py
 │   │   ├─ urls.py
 │   │   └─ wsgi.py
