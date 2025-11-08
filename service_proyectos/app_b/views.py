@@ -1,6 +1,6 @@
 from rest_framework import generics, status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from .models import Proyecto
 from .serializers import ProyectoSerializer
@@ -11,17 +11,17 @@ import pybreaker
 class ProyectoListCreateView(generics.ListCreateAPIView):
     queryset = Proyecto.objects.all()
     serializer_class = ProyectoSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
 
 class ProyectoRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Proyecto.objects.all()
     serializer_class = ProyectoSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def detalle_proyecto(request, proyecto_id):
     try:
         proyecto = Proyecto.objects.get(id=proyecto_id)

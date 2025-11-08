@@ -34,6 +34,16 @@ En el sistema Administración de Proyectos - SAP:
 
 El servicio B necesita consultar a A y C para devolver información completa cuando el usuario consulta un proyecto.
 
+### URLs de cada servicio
+
+| Servicio     | Swagger UI                                         | Redoc                                            | Schema JSON                                  |
+| ------------ | -------------------------------------------------- | ------------------------------------------------ | -------------------------------------------- |
+| Auth         | `http://localhost:8000/auth/docs/swagger/`         | `http://localhost:8000/auth/docs/redoc/`         | `http://localhost:8000/auth/schema/`         |
+| Empresas     | `http://localhost:8000/empresas/docs/swagger/`     | `http://localhost:8000/empresas/docs/redoc/`     | `http://localhost:8000/empresas/schema/`     |
+| Proyectos    | `http://localhost:8000/proyectos/docs/swagger/`    | `http://localhost:8000/proyectos/docs/redoc/`    | `http://localhost:8000/proyectos/schema/`    |
+| Programación | `http://localhost:8000/programacion/docs/swagger/` | `http://localhost:8000/programacion/docs/redoc/` | `http://localhost:8000/programacion/schema/` |
+
+
 ### Flujo Detallado
 #### 1. El usuario solicita información de un proyecto
 

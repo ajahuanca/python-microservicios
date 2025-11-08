@@ -6,7 +6,7 @@ from .serializers import EmpresaSerializer
 class EmpresaListCreateView(generics.ListCreateAPIView):
     queryset = Empresa.objects.all()
     serializer_class = EmpresaSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def perform_create(self, serializer):
         username = ''
@@ -20,4 +20,4 @@ class EmpresaListCreateView(generics.ListCreateAPIView):
 class EmpresaRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Empresa.objects.all()
     serializer_class = EmpresaSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
