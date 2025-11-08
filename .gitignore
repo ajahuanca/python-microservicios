@@ -11,3 +11,4 @@ __pycache__/  # ignore __pycache__ folders in any directory recursively
 *$py.class    # for Jython
 
 .env
+.vscode
