@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     ProgramacionFisicoListCreateView, ProgramacionFisicoRUDView,
     ProgramacionFinancieraListCreateView, ProgramacionFinancieraRUDView,
-    SeguimientoListCreateView
+    SeguimientoListCreateView, ProgramacionCompletaView
 )
 
 
@@ -12,4 +12,5 @@ urlpatterns = [
     path('financiera/', ProgramacionFinancieraListCreateView.as_view(), name='financiera-list-create'),
     path('financiera/<int:pk>/', ProgramacionFinancieraRUDView.as_view(), name='financiera-rud'),
     path('seguimiento/', SeguimientoListCreateView.as_view(), name='seguimiento-list-create'),
+    path('completa/<int:proyecto_id>/', ProgramacionCompletaView.as_view(), name='programacion-completa'),
 ]

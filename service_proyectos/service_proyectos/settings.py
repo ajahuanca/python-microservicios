@@ -13,7 +13,10 @@ SECRET_KEY = 'django-insecure-y@_lp%799au6jm@&za6!udu6m@e(gb7i$ojpg*cwjlgi#=&#bf
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+SERVICE_EMPRESA_URL = os.getenv("SERVICE_EMPRESA_URL", "http://service_empresas:8000")
+SERVICE_PROGRAMACION_URL = os.getenv("SERVICE_PROGRAMACION_URL", "http://service_programacion:8000")
+
+ALLOWED_HOSTS = ['*', 'localhost' , '127.0.0.1', 'nginx', 'service_auth', 'service_programacion', 'service_empresas', 'service_proyectos']
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
