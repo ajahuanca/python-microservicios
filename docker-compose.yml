@@ -19,9 +19,9 @@ services:
   postgres_auth:
     image: postgres:15
     environment:
-      POSTGRES_DB: authdb
-      POSTGRES_USER: auth
-      POSTGRES_PASSWORD: authpass
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: auth_user
+      POSTGRES_PASSWORD: auth_pass
     volumes:
       - pg_auth_data:/var/lib/postgresql/data
     networks:
@@ -29,61 +29,55 @@ services:
 
   service_auth:
     build: ./service_auth
-    env_file:
-      - ./service_auth/.env
     environment:
-      - DATABASE_URL=postgres://auth:authpass@postgres_auth:5432/authdb
+      - DATABASE_URL=postgres://auth_user:auth_pass@postgres_auth:5432/auth_db
     depends_on:
       - postgres_auth
     networks:
       - front_net
       - internal_net
 
-  postgres_a:
+  postgres_empresa:
     image: postgres:15
     environment:
-      POSTGRES_DB: adb
-      POSTGRES_USER: auser
-      POSTGRES_PASSWORD: apass
+      POSTGRES_DB: empresa_db
+      POSTGRES_USER: empresa_user
+      POSTGRES_PASSWORD: empresa_pass
     volumes:
-      - pg_a_data:/var/lib/postgresql/data
+      - pg_empresa_data:/var/lib/postgresql/data
     networks:
       - internal_net
 
   service_empresas:
     build: ./service_empresas
-    env_file:
-      - ./service_empresas/.env
     environment:
-      - DATABASE_URL=postgres://auser:apass@postgres_a:5432/adb
+      - DATABASE_URL=postgres://empresa_user:empresa_pass@postgres_empresa:5432/empresa_db
     depends_on:
-      - postgres_a
+      - postgres_empresa
       - service_auth
     networks:
       - front_net
       - internal_net
 
-  postgres_b:
+  postgres_proyectos:
     image: postgres:15
     environment:
-      POSTGRES_DB: bdb
-      POSTGRES_USER: buser
-      POSTGRES_PASSWORD: bpass
+      POSTGRES_DB: proyectos_db
+      POSTGRES_USER: proyectos_user
+      POSTGRES_PASSWORD: proyectos_pass
     volumes:
-      - pg_b_data:/var/lib/postgresql/data
+      - pg_proyectos_data:/var/lib/postgresql/data
     networks:
       - internal_net
 
   service_proyectos:
     build: ./service_proyectos
-    env_file:
-      - ./service_proyectos/.env
     environment:
-      - DATABASE_URL=postgres://buser:bpass@postgres_b:5432/bdb
-      - SERVICE_A_URL=http://service_empresas:8000
-      - SERVICE_C_URL=http://service_programacion:8000
+      - DATABASE_URL=postgres://proyectos_user:proyectos_pass@postgres_proyectos:5432/proyectos_db
+      - SERVICE_EMPRESA_URL=http://service_empresas:8000
+      - SERVICE_PROGRAMACION_URL=http://service_programacion:8000
     depends_on:
-      - postgres_b
+      - postgres_proyectos
       - service_auth
       - service_empresas
       - service_programacion
@@ -91,25 +85,23 @@ services:
       - front_net
       - internal_net
 
-  postgres_c:
+  postgres_programacion:
     image: postgres:15
     environment:
-      POSTGRES_DB: cdb
-      POSTGRES_USER: cuser
-      POSTGRES_PASSWORD: cpass
+      POSTGRES_DB: programacion_db
+      POSTGRES_USER: programacion_user
+      POSTGRES_PASSWORD: programacion_pass
     volumes:
-      - pg_c_data:/var/lib/postgresql/data
+      - pg_programacion_data:/var/lib/postgresql/data
     networks:
       - internal_net
 
   service_programacion:
     build: ./service_programacion
-    env_file:
-      - ./service_programacion/.env
     environment:
-      - DATABASE_URL=postgres://cuser:cpass@postgres_c:5432/cdb
+      - DATABASE_URL=postgres://programacion_user:programacion_pass@postgres_programacion:5432/programacion_db
     depends_on:
-      - postgres_c
+      - postgres_programacion
       - service_auth
     networks:
       - front_net
@@ -117,9 +109,9 @@ services:
 
 volumes:
   pg_auth_data:
-  pg_a_data:
-  pg_b_data:
-  pg_c_data:
+  pg_empresa_data:
+  pg_proyectos_data:
+  pg_programacion_data:
 
 networks:
   front_net:
