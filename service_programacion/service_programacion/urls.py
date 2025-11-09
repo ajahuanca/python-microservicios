@@ -4,9 +4,9 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, Sp
 
 
 urlpatterns = [
-    path('schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('docs/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    path('docs/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
-    path('admin/', admin.site.urls),
+    path('programacion/schema/', SpectacularAPIView.as_view(), name='programacion-schema'),
+    path('programacion/docs/swagger/', SpectacularSwaggerView.as_view(url='/programacion/schema/'), name='programacion-swagger-ui'),
+    path('programacion/docs/redoc/', SpectacularRedocView.as_view(url_name='/programacion/schema/'), name='programacion-redoc'),
+    path('programacion/admin/', admin.site.urls),
     path('programacion/', include('app_c.urls')),
 ]
