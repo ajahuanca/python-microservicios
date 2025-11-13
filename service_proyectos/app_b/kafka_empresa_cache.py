@@ -1,4 +1,3 @@
-# app_b/kafka_empresa_cache.py
 from confluent_kafka import Consumer
 import threading, json, os, time
 
