@@ -1,5 +1,5 @@
 import httpx
-from tenacity import retry, stop_after_attempt, wait_exponential_jitter, retry_if_exception_type
+from tenacity import retry, stop_after_attempt, wait_exponential_jitter, wait_exponential, retry_if_exception_type
 import pybreaker
 
 from rest_framework.views import APIView
@@ -9,21 +9,10 @@ from rest_framework.permissions import AllowAny
 from .models import Proyecto
 from .serializers import ProyectoSerializer
 from django.conf import settings
+from .kafka_empresa_cache import empresa_cache, start_empresa_cache_listener
 
 
-class ProyectoListCreateView(generics.ListCreateAPIView):
-    queryset = Proyecto.objects.all()
-    serializer_class = ProyectoSerializer
-    permission_classes = [AllowAny]
-
-
-class ProyectoRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Proyecto.objects.all()
-    serializer_class = ProyectoSerializer
-    permission_classes = [AllowAny]
-
-
-breaker_c = pybreaker.CircuitBreaker(fail_max=4, reset_timeout=30, name="ServiceProgramacion")
+start_empresa_cache_listener()
 
 
 @retry(stop=stop_after_attempt(3),
@@ -34,12 +23,13 @@ def llamar_servicio_empresa(empresa_id):
     Uso se patron Retry para el servicio de Empresa
     """
     with httpx.Client(timeout=5) as client:
-        r = client.get( 
+        r = client.get(
             f"{settings.SERVICE_EMPRESA_URL}/empresas/{empresa_id}/",
             headers={"Host": "localhost"}
         )
         r.raise_for_status()
         return r.json()
+
 
 def llamar_servicio_programacion(proyecto_id):
     """
@@ -52,6 +42,53 @@ def llamar_servicio_programacion(proyecto_id):
         )
         r.raise_for_status()
         return r.json()
+
+
+class ProyectoListCreateView(generics.ListCreateAPIView):
+    queryset = Proyecto.objects.all()
+    serializer_class = ProyectoSerializer
+    permission_classes = [AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        empresa_id = request.data.get("empresa_id")
+
+        # verificar si existe en Kafka cache
+        if empresa_id in empresa_cache:
+            print(f"[Kafka] Empresa {empresa_id} encontrada en cache")
+        else:
+            print(f"[Kafka] Empresa {empresa_id} no encontrada en cache, verificando por HTTP...")
+            try:
+                # verificar_empresa_http(empresa_id)
+                llamar_servicio_empresa(empresa_id)
+            except pybreaker.CircuitBreakerError:
+                return Response(
+                    {"error": "Servicio de empresas no disponible (Circuit Open)"},
+                    status=status.HTTP_503_SERVICE_UNAVAILABLE
+                )
+            except Exception as e:
+                return Response(
+                    {"error": f"No se pudo verificar la empresa: {e}"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+        # pasa validación, crear proyecto
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(
+            {"message": "Proyecto registrado con éxito", "data": serializer.data},
+            status=status.HTTP_201_CREATED
+        )
+
+
+class ProyectoRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Proyecto.objects.all()
+    serializer_class = ProyectoSerializer
+    permission_classes = [AllowAny]
+
+
+breaker_c = pybreaker.CircuitBreaker(fail_max=4, reset_timeout=30, name="ServiceProgramacion")
 
 
 class ProyectoDetailView(APIView):

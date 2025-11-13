@@ -1,6 +1,8 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
 from .models import Empresa
 from .serializers import EmpresaSerializer
+from .kafka_producer import publish_empresa_creada_event
 
 
 class EmpresaListCreateView(generics.ListCreateAPIView):
@@ -12,9 +14,16 @@ class EmpresaListCreateView(generics.ListCreateAPIView):
         username = ''
         try:
             username = self.request.user.username
-        except Exception:
+        except Exception as e:
             username = None
-        serializer.save(usuario_registro=username)
+        empresa = serializer.save(usuario_registro=username)
+        publish_empresa_creada_event(empresa)
+        return Response(
+            {
+                "data": serializer.data,
+                "message": "Registro exitoso de datos de la empresa"
+            }, status=status.HTTP_201_CREATED
+        )
 
 
 class EmpresaRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):

@@ -113,7 +113,7 @@ SIMPLE_JWT = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Microservicio - Empresas',
-    'DESCRIPTION': 'API para autenticación centralizada JWT.',
+    'DESCRIPTION': 'API para Empresas.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'AUTHENTICATION_WHITELIST': [],

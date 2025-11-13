@@ -111,7 +111,7 @@ SIMPLE_JWT = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Microservicio - Programacion de Proyectos para Avances Fisico - Financiero',
-    'DESCRIPTION': 'API para autenticación centralizada JWT.',
+    'DESCRIPTION': 'API para Programación de proyectos, tanto avance fisico y financiero.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'AUTHENTICATION_WHITELIST': [],
